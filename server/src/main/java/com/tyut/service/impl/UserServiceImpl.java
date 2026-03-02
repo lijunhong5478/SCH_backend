@@ -2,6 +2,8 @@ package com.tyut.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyut.annotation.DataBackUp;
 import com.tyut.constant.AccountConstant;
 import com.tyut.constant.LoginConstant;
@@ -13,6 +15,7 @@ import com.tyut.entity.*;
 import com.tyut.exception.BaseException;
 import com.tyut.mapper.*;
 import com.tyut.properties.JwtProperties;
+import com.tyut.result.PageResult;
 import com.tyut.service.UserService;
 import com.tyut.utils.CryptoUtil;
 import com.tyut.utils.JwtUtil;
@@ -26,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -43,7 +47,6 @@ public class UserServiceImpl implements UserService {
     private OperationLogMapper operationLogMapper;
     @Autowired
     private HealthRecordMapper healthRecordMapper;
-
     /**
      * 用户登录
      *
@@ -133,7 +136,6 @@ public class UserServiceImpl implements UserService {
      *
      * @param residentRegisterDTO
      */
-    @DataBackUp(module = ModuleConstant.USER_REGISTER)
     @Transactional
     @Override
     public void registerResident(ResidentRegisterDTO residentRegisterDTO) {
@@ -167,7 +169,7 @@ public class UserServiceImpl implements UserService {
                 .userId(sysUser.getId())
                 .roleType(AccountConstant.ROLE_RESIDENT)
                 .methodName("com.tyut.service.impl.UserServiceImpl.registerResident")
-                .moduleName("用户注册")
+                .moduleName(String.valueOf(ModuleConstant.USER_REGISTER))
                 .createTime(LocalDateTime.now())
                 .build();
         operationLogMapper.insert(operationLog);
@@ -251,6 +253,14 @@ public class UserServiceImpl implements UserService {
         sysUser.setPassword(cryptoUtil.encodePassword(newPassword));
         userMapper.updateById(sysUser);
     }
+    @DataBackUp(module = ModuleConstant.USER_RESET_PASSWORD)
+    @Override
+    public void resetPassword(Long userId) {
+        LambdaUpdateWrapper<SysUser> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(SysUser::getId, userId)
+                .set(SysUser::getPassword, cryptoUtil.encodePassword("123456"));
+        userMapper.update(null, wrapper);
+    }
 
     /**
      * 启用禁用
@@ -301,4 +311,29 @@ public class UserServiceImpl implements UserService {
         BaseContext.remove();
         WebSocketContext.remove();
     }
+
+    @Override
+    public PageResult list(AccountQueryDTO accountQueryDTO) {
+        Page<SysUser> page = new Page<>(accountQueryDTO.getPageNum(), accountQueryDTO.getPageSize());
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysUser::getIsDeleted, accountQueryDTO.getIsDeleted());
+        if(accountQueryDTO.getStatus()!=null){
+            wrapper.eq(SysUser::getStatus, accountQueryDTO.getStatus());
+        }
+        if(accountQueryDTO.getRole()!=null){
+            wrapper.eq(SysUser::getRoleType, accountQueryDTO.getRole());
+        }
+        if(accountQueryDTO.getUsername()!=null){
+            wrapper.eq(SysUser::getUsername,accountQueryDTO.getUsername());
+        }
+        if(accountQueryDTO.getPhone()!=null){
+            wrapper.eq(SysUser::getPhone,accountQueryDTO.getPhone());
+        }
+        IPage<SysUser> sysUserPage = userMapper.selectPage(page, wrapper);
+        return PageResult.builder()
+                .total(sysUserPage.getTotal())
+                .dataList(sysUserPage.getRecords())
+                .build();
+    }
+
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tyut.mapper.ResidentMapper">
+
+    <!-- 居民年龄分布统计 -->
+    <select id="getResidentAgeCount" resultType="java.util.Map">
+        SELECT
+            CASE
+                WHEN age BETWEEN 20 AND 39 THEN '20-39岁'
+                WHEN age BETWEEN 40 AND 49 THEN '40-49岁'
+                WHEN age BETWEEN 50 AND 59 THEN '50-59岁'
+                WHEN age BETWEEN 60 AND 70 THEN '60-70岁'
+                WHEN age BETWEEN 71 AND 80 THEN '71-80岁'
+                ELSE '其他'
+                END AS name,
+            COUNT(*) AS value
+        FROM resident_profile
+        WHERE is_deleted = 0
+        GROUP BY
+            CASE
+            WHEN age BETWEEN 20 AND 39 THEN '20-39岁'
+            WHEN age BETWEEN 40 AND 49 THEN '40-49岁'
+            WHEN age BETWEEN 50 AND 59 THEN '50-59岁'
+            WHEN age BETWEEN 60 AND 70 THEN '60-70岁'
+            WHEN age BETWEEN 71 AND 80 THEN '71-80岁'
+            ELSE '其他'
+        END
+        ORDER BY
+          MIN(age)
+    </select>
+
+</mapper>

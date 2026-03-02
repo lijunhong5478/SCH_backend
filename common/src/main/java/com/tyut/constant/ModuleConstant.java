@@ -6,7 +6,8 @@ public enum ModuleConstant {
     USER_UPDATE_PASSWORD("修改密码"),
     USER_PROFILE_UPDATE("信息修改"),
     USER_STATUS_CHANGE("状态变更"),
-    USER_DELETE("删除"),
+    USER_DELETE("删除用户"),
+    USER_RESET_PASSWORD("重置密码"),
 
     // 家庭医生模块
     ONLINE_CONSULTATION("在线接诊"),

@@ -1,8 +1,8 @@
 package com.tyut.controller.admin;
 
-import com.tyut.dto.AddDoctorDTO;
-import com.tyut.dto.DoctorScheduleUpdateDTO;
+import com.tyut.dto.AccountQueryDTO;
 import com.tyut.dto.UpdateProfileDTO;
+import com.tyut.result.PageResult;
 import com.tyut.result.Result;
 import com.tyut.service.UserService;
 import com.tyut.vo.AdminDetailVO;
@@ -50,6 +50,19 @@ public class AccountController {
     @PutMapping("/revert/{id}")
     public Result<String> revertUser(@PathVariable Long id) {
         userService.revertUser(id);
+        return Result.success();
+    }
+
+    @ApiOperation("条件查询用户")
+    @GetMapping("/query")
+    public Result<PageResult> queryUsers(AccountQueryDTO dto) {
+        return Result.success(userService.list(dto));
+    }
+
+    @ApiOperation("重置密码")
+    @PutMapping("/resetPassword")
+    public Result<String> resetPassword(Long userId) {
+        userService.resetPassword(userId);
         return Result.success();
     }
 }

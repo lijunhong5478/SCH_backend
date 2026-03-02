@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tyut.mapper.AppointmentMapper">
+
+    <!-- 获取最近一周预约数量统计 -->
+    <select id="getWeeklyAppointmentCount" resultType="java.util.Map">
+        SELECT
+            appointment_date AS date,
+            COUNT(*) AS count
+        FROM appointment
+        WHERE appointment_date BETWEEN #{startDate} AND #{endDate}
+            AND is_deleted = 0
+        GROUP BY appointment_date
+        ORDER BY appointment_date DESC
+    </select>
+
+</mapper>

@@ -1,6 +1,7 @@
 package com.tyut.service;
 
 import com.tyut.dto.*;
+import com.tyut.result.PageResult;
 import com.tyut.vo.AdminDetailVO;
 import com.tyut.vo.DoctorDetailVO;
 import com.tyut.vo.LoginUserVO;
@@ -25,6 +26,8 @@ public interface UserService {
 
     void updatePassword(String oldPassword, String newPassword);
 
+    void resetPassword(Long userId);
+
     void updateStatus(Long id, Integer status);
 
     void deleteUser(Long id);
@@ -32,4 +35,6 @@ public interface UserService {
     void revertUser(Long id);
 
     void logout();
+
+    PageResult list(AccountQueryDTO accountQueryDTO);
 }
