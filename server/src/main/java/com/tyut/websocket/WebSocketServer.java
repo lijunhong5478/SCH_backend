@@ -151,6 +151,8 @@ public class WebSocketServer implements ApplicationContextAware {
             return 1; // 医生
         } else if (sid.startsWith("resident_")) {
             return 0; // 居民
+        }else if (sid.startsWith("admin_")) {
+            return 2; // 管理员
         }
         return null;
     }
@@ -188,10 +190,26 @@ public class WebSocketServer implements ApplicationContextAware {
     }
 
     /**
+     * 获取当前在线的管理员会话
+     */
+    public Collection<String> getOnlineAdmins() {
+        return sessionMap.keySet().stream()
+                .filter(key -> key.startsWith("admin_"))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    /**
      * 检查特定用户是否在线
      */
     public boolean isUserOnline(String userTypePrefix, Long userId) {
         String sid = userTypePrefix + "_" + userId;
         return sessionMap.containsKey(sid) && sessionMap.get(sid).isOpen();
+    }
+
+    /**
+     * 获取所有会话映射（用于管理员推送）
+     */
+    public ConcurrentHashMap<String, Session> getSessionMap() {
+        return sessionMap;
     }
 }

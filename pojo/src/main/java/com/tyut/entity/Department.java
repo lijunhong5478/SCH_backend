@@ -8,16 +8,13 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class HealthTips {
+@NoArgsConstructor
+@Builder
+public class Department {
     private Long id;
-    private Integer type;
-    private String title;
-    private String content;
-    private Long publisherId;
+    private String name;
+    private String description;
     private Integer isDeleted;
-    private LocalDateTime publishTime;
-    private String backgroundImage;
+    private LocalDateTime createTime;
 }

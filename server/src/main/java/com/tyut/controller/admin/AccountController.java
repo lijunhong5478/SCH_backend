@@ -9,9 +9,11 @@ import com.tyut.vo.AdminDetailVO;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController("adminAccountController")
 @RequestMapping("/admin/account")
 @Api(tags = "管理员-账户管理接口")
@@ -35,6 +37,8 @@ public class AccountController {
     @ApiOperation("启用禁用")
     @PutMapping("/status")
     public Result<String> updateStatus(Long id, Integer status) {
+        log.info("修改用户状态:{}", id);
+        log.info("启用禁用:{}", status);
         userService.updateStatus(id, status);
         return Result.success();
     }
@@ -62,6 +66,7 @@ public class AccountController {
     @ApiOperation("重置密码")
     @PutMapping("/resetPassword")
     public Result<String> resetPassword(Long userId) {
+        log.info("重置密码:{}", userId);
         userService.resetPassword(userId);
         return Result.success();
     }

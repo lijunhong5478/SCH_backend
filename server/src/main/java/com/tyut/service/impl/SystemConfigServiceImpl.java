@@ -79,4 +79,9 @@ public class SystemConfigServiceImpl implements SystemConfigService {
         SystemConfig config = systemConfigMapper.selectOne(queryWrapper);
         return config != null ? config.getConfigValue() : null;
     }
+    @DataBackUp(module = ModuleConstant.SYSTEM_CONFIG)
+    @Override
+    public void deleteSystemConfig(Long id) {
+        systemConfigMapper.deleteById(id);
+    }
 }

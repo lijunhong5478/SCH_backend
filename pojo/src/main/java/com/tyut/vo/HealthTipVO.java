@@ -30,4 +30,7 @@ public class HealthTipVO {
 
     @ApiModelProperty(value = "发布时间")
     private LocalDateTime publishTime;
+
+    @ApiModelProperty(value = "背景图片")
+    private String backgroundImage;
 }

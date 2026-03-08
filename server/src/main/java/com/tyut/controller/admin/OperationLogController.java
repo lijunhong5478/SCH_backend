@@ -9,9 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -26,5 +24,11 @@ public class OperationLogController {
     public Result<PageResult> list(OperationLogQueryDTO operationLogQueryDTO){
         operationLogQueryDTO.initDefaultValues();
         return Result.success(operationLogService.list(operationLogQueryDTO));
+    }
+    @DeleteMapping("/{id}")
+    @ApiOperation("删除操作日志")
+    public Result<String> delete(@PathVariable Long id){
+        operationLogService.deleteById(id);
+        return Result.success();
     }
 }

@@ -23,6 +23,7 @@ import com.tyut.vo.AdminDetailVO;
 import com.tyut.vo.DoctorDetailVO;
 import com.tyut.vo.LoginUserVO;
 import com.tyut.vo.ResidentDetailVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,9 +31,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
@@ -169,7 +172,7 @@ public class UserServiceImpl implements UserService {
                 .userId(sysUser.getId())
                 .roleType(AccountConstant.ROLE_RESIDENT)
                 .methodName("com.tyut.service.impl.UserServiceImpl.registerResident")
-                .moduleName(String.valueOf(ModuleConstant.USER_REGISTER))
+                .moduleName(ModuleConstant.USER_REGISTER.getDescription())
                 .createTime(LocalDateTime.now())
                 .build();
         operationLogMapper.insert(operationLog);
@@ -192,7 +195,11 @@ public class UserServiceImpl implements UserService {
     public void updateAdmin(UpdateProfileDTO updateProfileDTO) {
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(updateProfileDTO, sysUser);
-        userMapper.updateById(sysUser);
+        try{
+            userMapper.updateById(sysUser);
+        }catch (Exception e){
+            throw new BaseException("用户名或电话号码重复！");
+        }
     }
 
     /**
@@ -330,9 +337,11 @@ public class UserServiceImpl implements UserService {
             wrapper.eq(SysUser::getPhone,accountQueryDTO.getPhone());
         }
         IPage<SysUser> sysUserPage = userMapper.selectPage(page, wrapper);
+        List<SysUser> records = sysUserPage.getRecords();
+        records.forEach(sysUser -> sysUser.setIdCard(cryptoUtil.decodeIdCard(sysUser.getIdCard())));
         return PageResult.builder()
                 .total(sysUserPage.getTotal())
-                .dataList(sysUserPage.getRecords())
+                .dataList(records)
                 .build();
     }
 

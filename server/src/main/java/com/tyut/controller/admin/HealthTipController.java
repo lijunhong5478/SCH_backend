@@ -27,7 +27,6 @@ public class HealthTipController {
     @PostMapping("/publish")
     @ApiOperation("发布健康宣教")
     public Result<String> publishHealthTip(@RequestBody @Valid HealthTips healthTips) {
-        healthTips.setType(HealthTipConstant.POLICY);
         healthTipService.publishHealthTip(healthTips);
         return Result.success("发布成功");
     }

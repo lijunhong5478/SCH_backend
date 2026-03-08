@@ -27,8 +27,6 @@ public class HealthTipController {
     @PostMapping("/publish")
     @ApiOperation("发布科普宣教")
     public Result<String> publishHealthTip(@RequestBody @Valid HealthTips healthTips) {
-        // 强制设置为科普类型
-        healthTips.setType(HealthTipConstant.EDUCATION);
         healthTipService.publishHealthTip(healthTips);
         return Result.success("发布成功");
     }

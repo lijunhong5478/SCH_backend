@@ -4,25 +4,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="完成了后端部分主干内容，后续可以补充导出健康档案报表的逻辑以及部分数据统计逻辑。还可以引入缓存和消息队列优化性能。">
-      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/AccountQueryDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/GraphController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/GraphService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/GraphServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/resources/mapper/AppointmentMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/src/main/resources/mapper/ResidentMapper.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/src/test/java/BatchDoctorGeneratorTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web/src/test/java/BatchResidentGeneratorTest.java" afterDir="false" />
+    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="完成了后端所有业务功能，后续可以在查询医生信息方面增加Redis缓存，在叫号挂号模块引入消息队列作为优化。">
+      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/entity/Department.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/vo/OperationLogVO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/AppointmentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/DepartmentController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/DepartmentMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/DepartmentService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DepartmentServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/src/test/java/com/tyut/BatchAvatarSetupTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web/src/test/java/com/tyut/BatchImageUploadTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e7d61a73-bbd4-480f-9dca-39d6ca7bf947.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e7d61a73-bbd4-480f-9dca-39d6ca7bf947.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/constant/ModuleConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/constant/ModuleConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/WebMvcConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/constant/AppointConstant.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/constant/AppointConstant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/interceptor/JwtInterceptor.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/interceptor/JwtInterceptor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/entity/HealthTips.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/entity/HealthTips.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/vo/HealthTipVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/vo/HealthTipVO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/AppointmentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/AppointmentMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/DoctorProfileMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/DoctorProfileMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/ResidentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/ResidentMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/DoctorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/DoctorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/EpidemicAlertController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/EpidemicAlertController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/HealthTipController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/HealthTipController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/OperationLogController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/OperationLogController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/SystemConfigController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/admin/SystemConfigController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/AccountController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/HealthTipController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/HealthTipController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/mapper/UserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/AppointmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/AppointmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/DoctorService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/DoctorService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/OperationLogService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/OperationLogService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/SystemConfigService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/SystemConfigService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/AppointmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/AppointmentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/OperationLogServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/OperationLogServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/SystemConfigServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/SystemConfigServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/resources/mapper/DoctorProfileMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/resources/mapper/DoctorProfileMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/test/java/TestCrypto.java" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/test/java/TestCrypto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/websocket/WebSocketServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/websocket/WebSocketServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +110,10 @@
   &quot;keyToString&quot;: {
     &quot;Application.Application.executor&quot;: &quot;Run&quot;,
     &quot;Application.AppointmentUtil.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BatchAvatarSetupTest.setupAllUserAvatars.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.BatchDoctorGeneratorTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BatchImageUploadTest.batchUploadImagesToOSS.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.BatchImageUploadTest.testSingleImageUpload.executor&quot;: &quot;Debug&quot;,
     &quot;JUnit.BatchResidentGeneratorTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.ConsultationServiceTest.testBasicCommunication.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.IdCardAESTest.testEncryptionVerification.executor&quot;: &quot;Run&quot;,
@@ -149,6 +172,22 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.Application">
+    <configuration name="BatchAvatarSetupTest.setupAllUserAvatars" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="web" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.tyut.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.tyut" />
+      <option name="MAIN_CLASS_NAME" value="com.tyut.BatchAvatarSetupTest" />
+      <option name="METHOD_NAME" value="setupAllUserAvatars" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="BatchDoctorGeneratorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="web" />
       <option name="PACKAGE_NAME" value="" />
@@ -158,16 +197,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BatchResidentGeneratorTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="web" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="BatchResidentGeneratorTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="IdCardAESTest.testIdCardRangeEncryption" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="BatchImageUploadTest.batchUploadImagesToOSS" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="web" />
       <extension name="coverage">
         <pattern>
@@ -176,18 +206,24 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.tyut" />
-      <option name="MAIN_CLASS_NAME" value="com.tyut.IdCardAESTest" />
-      <option name="METHOD_NAME" value="testIdCardRangeEncryption" />
+      <option name="MAIN_CLASS_NAME" value="com.tyut.BatchImageUploadTest" />
+      <option name="METHOD_NAME" value="batchUploadImagesToOSS" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestCrypto.getIdCard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="BatchImageUploadTest.testSingleImageUpload" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="web" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestCrypto" />
-      <option name="METHOD_NAME" value="getIdCard" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.tyut.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.tyut" />
+      <option name="MAIN_CLASS_NAME" value="com.tyut.BatchImageUploadTest" />
+      <option name="METHOD_NAME" value="testSingleImageUpload" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -209,10 +245,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.Application" />
+        <item itemvalue="JUnit.BatchAvatarSetupTest.setupAllUserAvatars" />
+        <item itemvalue="JUnit.BatchImageUploadTest.batchUploadImagesToOSS" />
+        <item itemvalue="JUnit.BatchImageUploadTest.testSingleImageUpload" />
         <item itemvalue="JUnit.BatchDoctorGeneratorTest" />
-        <item itemvalue="JUnit.TestCrypto.getIdCard" />
-        <item itemvalue="JUnit.BatchResidentGeneratorTest" />
-        <item itemvalue="JUnit.IdCardAESTest.testIdCardRangeEncryption" />
       </list>
     </recent_temporary>
   </component>
@@ -275,7 +311,19 @@
       <workItem from="1772420278501" duration="3425000" />
       <workItem from="1772441232966" duration="791000" />
       <workItem from="1772442417975" duration="4207000" />
-      <workItem from="1772446669932" duration="649000" />
+      <workItem from="1772446669932" duration="737000" />
+      <workItem from="1772450562653" duration="2553000" />
+      <workItem from="1772506449216" duration="1763000" />
+      <workItem from="1772509668528" duration="24000" />
+      <workItem from="1772592292970" duration="4154000" />
+      <workItem from="1772674558400" duration="5260000" />
+      <workItem from="1772760232844" duration="5509000" />
+      <workItem from="1772771649274" duration="3364000" />
+      <workItem from="1772785252300" duration="9668000" />
+      <workItem from="1772844524037" duration="6826000" />
+      <workItem from="1772869324874" duration="9013000" />
+      <workItem from="1772880298163" duration="4468000" />
+      <workItem from="1772935359246" duration="3971000" />
     </task>
     <task id="LOCAL-00001" summary="1.完成了系统初始化配置 2.完成了用户管理模块，为不同角色的用户赋予了不同的操作权限 3.完成了日志记录，引入逻辑删除字段，便于系统的备份与恢复">
       <option name="closed" value="true" />
@@ -357,7 +405,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772371462393</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="完成了后端所有业务功能，后续可以在查询医生信息方面增加Redis缓存，在叫号挂号模块引入消息队列作为优化。">
+      <option name="closed" value="true" />
+      <created>1772447486286</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1772447486287</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -395,7 +451,8 @@
     <MESSAGE value="完善了身份证号加密逻辑，目前用户的身份证号为从140000000000000000到140000000000000008,后续会按此规律一次增加用户，同时完成了接诊记录相关操作" />
     <MESSAGE value="完成了健康档案管理模块的主干内容（后续可以补充导出功能）" />
     <MESSAGE value="完成了后端部分主干内容，后续可以补充导出健康档案报表的逻辑以及部分数据统计逻辑。还可以引入缓存和消息队列优化性能。" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成了后端部分主干内容，后续可以补充导出健康档案报表的逻辑以及部分数据统计逻辑。还可以引入缓存和消息队列优化性能。" />
+    <MESSAGE value="完成了后端所有业务功能，后续可以在查询医生信息方面增加Redis缓存，在叫号挂号模块引入消息队列作为优化。" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成了后端所有业务功能，后续可以在查询医生信息方面增加Redis缓存，在叫号挂号模块引入消息队列作为优化。" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

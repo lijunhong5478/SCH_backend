@@ -20,4 +20,5 @@ public class AppointConstant {
      * 已完成
      */
     public static final Integer FINSHED = 3;
+
 }

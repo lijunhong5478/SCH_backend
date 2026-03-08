@@ -20,4 +20,6 @@ public interface UserMapper extends BaseMapper<SysUser> {
     DoctorDetailVO selectDoctorById(Long id);
     // 根据id 查询居民信息
     ResidentDetailVO selectResidentById(Long id);
+    @Select("select username from sys_user where id=#{id}")
+    String selectUsernameById(Long id);
 }

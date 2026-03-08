@@ -29,4 +29,9 @@ public interface SystemConfigService {
      * @return 配置值
      */
     String getConfigValueByKey(String configKey);
+    /**
+     * 根据id键删除配置项
+     * @param id 配置id
+     */
+    void deleteSystemConfig(Long id);
 }

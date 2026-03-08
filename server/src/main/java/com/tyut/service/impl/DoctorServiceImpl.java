@@ -73,6 +73,8 @@ public class DoctorServiceImpl implements DoctorService {
         for (DoctorSchedule doctorSchedule : addDoctorDTO.getDoctorSchedules()) {
             doctorSchedule.setDoctorId(sysUser.getId());
             doctorSchedule.setCreateTime(LocalDateTime.now());
+            doctorSchedule.setCurrentNumber(0);
+            doctorSchedule.setStatus(AccountConstant.STATUS_NORMAL);
             doctorScheduleMapper.insert(doctorSchedule);
         }
     }
@@ -121,6 +123,13 @@ public class DoctorServiceImpl implements DoctorService {
                 .total(pageData.getTotal())
                 .dataList(doctors)
                 .build();
+    }
+
+    @Override
+    public List<DoctorSchedule> getDoctorScheduleById(Long id) {
+        LambdaQueryWrapper<DoctorSchedule> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DoctorSchedule::getDoctorId, id);
+        return doctorScheduleMapper.selectList(queryWrapper);
     }
 
 }

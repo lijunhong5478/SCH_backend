@@ -27,9 +27,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.websocket.Session;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,6 +44,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private TriageUtil triageUtil;
     @Autowired
     private WebSocketServer webSocketServer;
+
     @DataBackUp(module = ModuleConstant.APPOINTMENT_BOOK)
     @Override
     public void saveAppointment(ExactTimeAppointmentDTO dto) {
@@ -56,7 +58,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (doctorSchedule.getStatus() == 0) throw new BaseException("该医生已停诊");
         if (doctorSchedule.getCurrentNumber() >= doctorSchedule.getMaxNumber())
             throw new BaseException("当前医生已满号");
-        AppointmentQueryDTO query= new AppointmentQueryDTO();
+        AppointmentQueryDTO query = new AppointmentQueryDTO();
         BeanUtils.copyProperties(dto, query);
         Integer weekDay = doctorSchedule.getWeekDay();
         Integer triageLevel = triageUtil.determineTriageLevel(appointment.getSymptom());
@@ -69,6 +71,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         //发送通知给医生
         sendNotification("doctor", dto.getDoctorId(), "新预约通知", appointment.getQueueNo());
+        //发送通知给管理员
+        pushAppointmentStatsToAdmins();
     }
 
     @Override
@@ -90,7 +94,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (dto.getAppointmentDate() != null) {
             queryWrapper.eq(Appointment::getAppointmentDate, dto.getAppointmentDate());
         }
-        if(dto.getAppointmentTime()!=null){
+        if (dto.getAppointmentTime() != null) {
             queryWrapper.eq(Appointment::getAppointmentTime, dto.getAppointmentTime());
         }
         // 根据用户角色决定排序策略
@@ -121,6 +125,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .dataList(appointmentIPage.getRecords())
                 .build();
     }
+
     @DataBackUp(module = ModuleConstant.APPOINTMENT_CANCEL)
     @Override
     public void cancelAppointment(Long appointmentId, String cancelReason) {
@@ -138,70 +143,132 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         //发送通知给医生
         sendNotification("doctor", appointment.getDoctorId(), "取消预约通知", appointment.getQueueNo());
+        pushAppointmentStatsToAdmins();
     }
+
     @DataBackUp(module = ModuleConstant.APPOINTMENT_CALL)
     @Override
     public void call(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
         if (!Objects.equals(appointment.getAppointmentStatus(), AppointConstant.BOOKED)
-                || Objects.equals(appointment.getVisitStatus(), VisitConstant.IN_VISIT))
-        {
+                || Objects.equals(appointment.getVisitStatus(), VisitConstant.IN_VISIT)) {
             throw new BaseException("当前预约不可叫号！");
         }
         appointment.setVisitStatus(VisitConstant.CALLED);
 
         appointmentMapper.updateById(appointment);
         sendNotification("resident", appointment.getResidentId(), "叫号通知", appointment.getQueueNo());
+        pushAppointmentStatsToAdmins();
     }
+
     @DataBackUp(module = ModuleConstant.APPOINTMENT_START)
     @Override
     public void startConsult(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
-        if(appointment.getAppointmentStatus() != AppointConstant.BOOKED){
+        if (appointment.getAppointmentStatus() != AppointConstant.BOOKED) {
             throw new BaseException("当前预约不可开始咨询！");
         }
-        if(appointment.getVisitStatus() != VisitConstant.CALLED){
+        if (appointment.getVisitStatus() != VisitConstant.CALLED) {
             throw new BaseException("请先叫号！");
         }
         appointment.setVisitStatus(VisitConstant.IN_VISIT);
         appointmentMapper.updateById(appointment);
+        pushAppointmentStatsToAdmins();
     }
+
     @DataBackUp(module = ModuleConstant.APPOINTMENT_SKIP)
     @Override
     public void skip(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
-        if(!Objects.equals(appointment.getAppointmentStatus(), AppointConstant.BOOKED)
+        if (!Objects.equals(appointment.getAppointmentStatus(), AppointConstant.BOOKED)
                 || !Objects.equals(appointment.getVisitStatus(), VisitConstant.CALLED)
-        ){
+        ) {
             throw new BaseException("当前预约不可跳过！");
         }
         appointment.setVisitStatus(VisitConstant.SKIPPED);
         appointmentMapper.updateById(appointment);
         sendNotification("resident", appointment.getResidentId(), "过号通知", appointment.getQueueNo());
+        pushAppointmentStatsToAdmins();
     }
+
     @DataBackUp(module = ModuleConstant.APPOINTMENT_FINISH)
     @Override
     public void finish(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
-        if(!Objects.equals(appointment.getAppointmentStatus(), AppointConstant.BOOKED)
+        if (!Objects.equals(appointment.getAppointmentStatus(), AppointConstant.BOOKED)
                 || !Objects.equals(appointment.getVisitStatus(), VisitConstant.IN_VISIT)
-        ){
+        ) {
             throw new BaseException("当前预约不可结束！");
         }
         appointment.setAppointmentStatus(AppointConstant.FINSHED);
         appointment.setVisitStatus(VisitConstant.DONE);
         appointmentMapper.updateById(appointment);
         sendNotification("resident", appointment.getResidentId(), "结束咨询通知", appointment.getQueueNo());
+        pushAppointmentStatsToAdmins();
     }
+
     @Override
     public Boolean isAppointed(AppointmentQueryDTO dto) {
         LambdaQueryWrapper<Appointment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Appointment::getResidentId, dto.getResidentId())
-                .eq(Appointment::getDoctorId,dto.getDoctorId())
-                .eq(Appointment::getAppointmentDate,dto.getAppointmentDate())
-                .eq(Appointment::getAppointmentTime,dto.getAppointmentTime());
+                .eq(Appointment::getDoctorId, dto.getDoctorId())
+                .eq(Appointment::getAppointmentDate, dto.getAppointmentDate())
+                .eq(Appointment::getAppointmentTime, dto.getAppointmentTime());
         Appointment appointment = appointmentMapper.selectOne(queryWrapper);
         return appointment != null;
+    }
+
+    @Override
+    public Map<String, Integer> getTodayAppointmentStatusCount() {
+        LocalDate today = LocalDate.now();
+
+        // 查询排队中的数量（visitStatus: WAITING=0 或 CALLED=1）
+        LambdaQueryWrapper<Appointment> waitingWrapper = new LambdaQueryWrapper<>();
+        waitingWrapper.eq(Appointment::getAppointmentDate, today)
+                .eq(Appointment::getAppointmentStatus, AppointConstant.BOOKED)
+                .in(Appointment::getVisitStatus,
+                        VisitConstant.WAITING,
+                        VisitConstant.CALLED);
+        Integer waitingCount = Math.toIntExact(appointmentMapper.selectCount(waitingWrapper));
+
+        // 查询就诊中的数量（visitStatus: IN_VISIT=2）
+        LambdaQueryWrapper<Appointment> inVisitWrapper = new LambdaQueryWrapper<>();
+        inVisitWrapper.eq(Appointment::getAppointmentDate, today)
+                .eq(Appointment::getAppointmentStatus, AppointConstant.BOOKED)
+                .eq(Appointment::getVisitStatus, VisitConstant.IN_VISIT);
+        Integer inVisitCount = Math.toIntExact(appointmentMapper.selectCount(inVisitWrapper));
+
+        // 查询已完成的数量（appointmentStatus: FINISHED=3）
+        LambdaQueryWrapper<Appointment> finishedWrapper = new LambdaQueryWrapper<>();
+        finishedWrapper.eq(Appointment::getAppointmentDate, today)
+                .eq(Appointment::getAppointmentStatus, AppointConstant.FINSHED);
+        Integer finishedCount = Math.toIntExact(appointmentMapper.selectCount(finishedWrapper));
+
+        Map<String, Integer> result = new HashMap<>();
+        result.put("waiting", waitingCount);
+        result.put("inVisit", inVisitCount);
+        result.put("finished", finishedCount);
+        return result;
+    }
+
+    /**
+     * 向所有在线管理员推送预约统计数据
+     */
+    private void pushAppointmentStatsToAdmins() {
+        try {
+            Map<String, Integer> stats = getTodayAppointmentStatusCount();
+            String message = buildStatsJson(stats);
+
+            // 群发给所有在线的管理员
+            Collection<Session> adminSessions = webSocketServer.getSessionMap().values();
+            for (Session session : adminSessions) {
+                if (session.isOpen()) {
+                    session.getBasicRemote().sendText(message);
+                }
+            }
+        } catch (Exception e) {
+            log.error("推送预约统计数据失败", e);
+        }
     }
 
     /**
@@ -215,7 +282,6 @@ public class AppointmentServiceImpl implements AppointmentService {
                         dto.getVisitStatus() == VisitConstant.CALLED);
     }
 
-    
 
     /**
      * 通用通知发送方法
@@ -267,5 +333,24 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .replace("\r", "\\r")
                 .replace("\t", "\\t");
     }
-
+    /**
+     * 构建统计 JSON 消息
+     */
+    private String buildStatsJson(Map<String, Integer> stats) {
+        return String.format(
+                "{"
+                        + "\"type\":\"appointment_stats\","
+                        + "\"data\":{"
+                        + "\"waiting\":%d,"
+                        + "\"inVisit\":%d,"
+                        + "\"finished\":%d"
+                        + "},"
+                        + "\"timestamp\":\"%s\""
+                        + "}",
+                stats.getOrDefault("waiting", 0),
+                stats.getOrDefault("inVisit", 0),
+                stats.getOrDefault("finished", 0),
+                LocalDateTime.now().toString()
+        );
+    }
 }

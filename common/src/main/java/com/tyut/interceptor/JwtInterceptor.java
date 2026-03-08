@@ -31,9 +31,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         // 获取 token
         String token = request.getHeader("token");
-
         if (token == null || token.isEmpty()) {
-            log.error("Token缺失");
             response.setStatus(ResultCode.UNAUTHORIZED);
             return false;
         }

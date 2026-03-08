@@ -12,6 +12,9 @@ spring:
   redis:
     host: ${tyut.redis.host}
     port: ${tyut.redis.port}
+  servlet:
+    multipart:
+      max-file-size: 10MB
 server:
   port: ${tyut.server.port}
 mybatis-plus:

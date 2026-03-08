@@ -21,13 +21,6 @@ public class SystemConfigController {
     @Resource
     private SystemConfigService systemConfigService;
 
-    @PostMapping
-    @ApiOperation("新增系统配置")
-    public Result<String> addSystemConfig(@RequestBody @Valid SystemConfig systemConfig) {
-        systemConfigService.addSystemConfig(systemConfig);
-        return Result.success("新增成功");
-    }
-
     @PutMapping
     @ApiOperation("更新系统配置")
     public Result<String> updateSystemConfig(@RequestBody @Valid SystemConfig systemConfig) {
@@ -41,4 +34,5 @@ public class SystemConfigController {
         List<SystemConfig> configs = systemConfigService.getAllSystemConfigs();
         return Result.success(configs);
     }
+
 }

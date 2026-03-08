@@ -3,11 +3,13 @@ package com.tyut.config;
 import com.tyut.interceptor.JwtInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 @Slf4j
 @Configuration
@@ -25,7 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         log.info("配置跨域策略...");
         registry.addMapping("/**")
                 .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "DELETE");
+                .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS");
     }
 
     /**
@@ -53,8 +55,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/error",
                         "/csrf",
                         "/common/user/login/**",
-                        "/common/user/logout/**",
-                        "/resident/account/register/**"
+                        "/resident/account/register/**",
+                        "/ws/**"
                 );
     }
 
@@ -70,5 +72,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
         registry.addResourceHandler("/swagger-ui/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/swagger-ui/");
+    }
+    /**
+     * 注册 ServerEndpointExporter，用于扫描和注册 WebSocket 端点
+     */
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
     }
 }

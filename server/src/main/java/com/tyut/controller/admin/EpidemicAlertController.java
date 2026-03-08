@@ -33,6 +33,7 @@ public class EpidemicAlertController {
     @GetMapping("/{id}")
     @ApiOperation("根据ID查询疫情预警详情")
     public Result<EpidemicAlertVO> getEpidemicAlertById(@PathVariable Long id) {
+        log.info("查询ID为{}的疫情预警", id);
         EpidemicAlertVO epidemicAlertVO = epidemicAlertService.getEpidemicAlertById(id);
         return Result.success(epidemicAlertVO);
     }

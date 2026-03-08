@@ -1824,7 +1824,7 @@ time_slot</ColNames>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
     <column id="461" parent="325" name="id">
-      <AutoIncrement>1</AutoIncrement>
+      <AutoIncrement>4</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
@@ -1860,472 +1860,476 @@ time_slot</ColNames>
       <Position>7</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <foreign-key id="468" parent="325" name="health_tips_ibfk_1">
+    <column id="468" parent="325" name="background_image">
+      <Position>8</Position>
+      <StoredType>varchar(500)|0s</StoredType>
+    </column>
+    <foreign-key id="469" parent="325" name="health_tips_ibfk_1">
       <ColNames>publisher_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>sys_user</RefTableName>
     </foreign-key>
-    <index id="469" parent="325" name="PRIMARY">
+    <index id="470" parent="325" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="470" parent="325" name="publisher_id">
+    <index id="471" parent="325" name="publisher_id">
       <ColNames>publisher_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="471" parent="325" name="PRIMARY">
+    <key id="472" parent="325" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="472" parent="326" name="id">
+    <column id="473" parent="326" name="id">
       <AutoIncrement>1</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="473" parent="326" name="resident_id">
+    <column id="474" parent="326" name="resident_id">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="474" parent="326" name="doctor_id">
+    <column id="475" parent="326" name="doctor_id">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="475" parent="326" name="chief_complaint">
+    <column id="476" parent="326" name="chief_complaint">
       <Comment>主诉</Comment>
       <Position>4</Position>
       <StoredType>text|0s</StoredType>
     </column>
-    <column id="476" parent="326" name="treatment_advice">
+    <column id="477" parent="326" name="treatment_advice">
       <Comment>治疗建议</Comment>
       <Position>5</Position>
       <StoredType>text|0s</StoredType>
     </column>
-    <column id="477" parent="326" name="is_deleted">
+    <column id="478" parent="326" name="is_deleted">
       <DefaultExpression>0</DefaultExpression>
       <Position>6</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="478" parent="326" name="create_time">
+    <column id="479" parent="326" name="create_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>7</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <foreign-key id="479" parent="326" name="medical_visit_ibfk_1">
+    <foreign-key id="480" parent="326" name="medical_visit_ibfk_1">
       <ColNames>resident_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>sys_user</RefTableName>
     </foreign-key>
-    <foreign-key id="480" parent="326" name="medical_visit_ibfk_2">
+    <foreign-key id="481" parent="326" name="medical_visit_ibfk_2">
       <ColNames>doctor_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>sys_user</RefTableName>
     </foreign-key>
-    <index id="481" parent="326" name="PRIMARY">
+    <index id="482" parent="326" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="482" parent="326" name="medical_visit_ibfk_1">
+    <index id="483" parent="326" name="medical_visit_ibfk_1">
       <ColNames>resident_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="483" parent="326" name="medical_visit_ibfk_2">
+    <index id="484" parent="326" name="medical_visit_ibfk_2">
       <ColNames>doctor_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="484" parent="326" name="PRIMARY">
+    <key id="485" parent="326" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="485" parent="327" name="id">
+    <column id="486" parent="327" name="id">
       <AutoIncrement>1</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="486" parent="327" name="user_id">
+    <column id="487" parent="327" name="user_id">
       <Comment>用户ID</Comment>
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="487" parent="327" name="role_type">
+    <column id="488" parent="327" name="role_type">
       <Comment>0管理员 1医生 2居民</Comment>
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="488" parent="327" name="method_name">
+    <column id="489" parent="327" name="method_name">
       <Comment>调用的方法名</Comment>
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StoredType>varchar(100)|0s</StoredType>
     </column>
-    <column id="489" parent="327" name="module_name">
+    <column id="490" parent="327" name="module_name">
       <Comment>所属模块</Comment>
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>varchar(50)|0s</StoredType>
     </column>
-    <column id="490" parent="327" name="create_time">
+    <column id="491" parent="327" name="create_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>6</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <index id="491" parent="327" name="PRIMARY">
+    <index id="492" parent="327" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="492" parent="327" name="PRIMARY">
+    <key id="493" parent="327" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="493" parent="328" name="id">
+    <column id="494" parent="328" name="id">
       <AutoIncrement>1</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="494" parent="328" name="height">
+    <column id="495" parent="328" name="height">
       <Comment>身高(cm)</Comment>
       <Position>2</Position>
       <StoredType>decimal(5,2 digit)|0s</StoredType>
     </column>
-    <column id="495" parent="328" name="weight">
+    <column id="496" parent="328" name="weight">
       <Comment>体重(kg)</Comment>
       <Position>3</Position>
       <StoredType>decimal(5,2 digit)|0s</StoredType>
     </column>
-    <column id="496" parent="328" name="systolic_bp">
+    <column id="497" parent="328" name="systolic_bp">
       <Comment>收缩压</Comment>
       <Position>4</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="497" parent="328" name="diastolic_bp">
+    <column id="498" parent="328" name="diastolic_bp">
       <Comment>舒张压</Comment>
       <Position>5</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="498" parent="328" name="heart_rate">
+    <column id="499" parent="328" name="heart_rate">
       <Comment>心率</Comment>
       <Position>6</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="499" parent="328" name="blood_sugar">
+    <column id="500" parent="328" name="blood_sugar">
       <Position>7</Position>
       <StoredType>decimal(5,2 digit)|0s</StoredType>
     </column>
-    <column id="500" parent="328" name="bmi">
+    <column id="501" parent="328" name="bmi">
       <Position>8</Position>
       <StoredType>decimal(5,2 digit)|0s</StoredType>
     </column>
-    <column id="501" parent="328" name="exam_time">
+    <column id="502" parent="328" name="exam_time">
       <NotNull>1</NotNull>
       <Position>9</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="502" parent="328" name="is_deleted">
+    <column id="503" parent="328" name="is_deleted">
       <DefaultExpression>0</DefaultExpression>
       <Position>10</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="503" parent="328" name="create_time">
+    <column id="504" parent="328" name="create_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>11</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="504" parent="328" name="record_id">
+    <column id="505" parent="328" name="record_id">
       <Position>12</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <foreign-key id="505" parent="328" name="fk_physical_record">
+    <foreign-key id="506" parent="328" name="fk_physical_record">
       <ColNames>record_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>health_record</RefTableName>
     </foreign-key>
-    <index id="506" parent="328" name="PRIMARY">
+    <index id="507" parent="328" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="507" parent="328" name="fk_physical_record">
+    <index id="508" parent="328" name="fk_physical_record">
       <ColNames>record_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="508" parent="328" name="PRIMARY">
+    <key id="509" parent="328" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="509" parent="329" name="id">
+    <column id="510" parent="329" name="id">
       <AutoIncrement>1</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="510" parent="329" name="record_id">
+    <column id="511" parent="329" name="record_id">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="511" parent="329" name="chronic_disease">
+    <column id="512" parent="329" name="chronic_disease">
       <Comment>慢性病史</Comment>
       <Position>3</Position>
       <StoredType>text|0s</StoredType>
     </column>
-    <column id="512" parent="329" name="past_medical_history">
+    <column id="513" parent="329" name="past_medical_history">
       <Comment>既往病史</Comment>
       <Position>4</Position>
       <StoredType>text|0s</StoredType>
     </column>
-    <column id="513" parent="329" name="allergy_history">
+    <column id="514" parent="329" name="allergy_history">
       <Comment>过敏史</Comment>
       <Position>5</Position>
       <StoredType>text|0s</StoredType>
     </column>
-    <column id="514" parent="329" name="family_history">
+    <column id="515" parent="329" name="family_history">
       <Comment>家族史</Comment>
       <Position>6</Position>
       <StoredType>text|0s</StoredType>
     </column>
-    <column id="515" parent="329" name="surgery_history">
+    <column id="516" parent="329" name="surgery_history">
       <Comment>手术史</Comment>
       <Position>7</Position>
       <StoredType>text|0s</StoredType>
     </column>
-    <column id="516" parent="329" name="create_time">
+    <column id="517" parent="329" name="create_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>8</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="517" parent="329" name="update_time">
+    <column id="518" parent="329" name="update_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
       <Position>9</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="518" parent="329" name="is_deleted">
+    <column id="519" parent="329" name="is_deleted">
       <DefaultExpression>0</DefaultExpression>
       <Position>10</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <foreign-key id="519" parent="329" name="resident_medical_history_health_record_id_fk">
+    <foreign-key id="520" parent="329" name="resident_medical_history_health_record_id_fk">
       <ColNames>record_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>health_record</RefTableName>
     </foreign-key>
-    <index id="520" parent="329" name="PRIMARY">
+    <index id="521" parent="329" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="521" parent="329" name="resident_medical_history_health_record_id_fk">
+    <index id="522" parent="329" name="resident_medical_history_health_record_id_fk">
       <ColNames>record_id</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="522" parent="329" name="PRIMARY">
+    <key id="523" parent="329" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="523" parent="330" name="id">
+    <column id="524" parent="330" name="id">
       <AutoIncrement>3</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="524" parent="330" name="user_id">
+    <column id="525" parent="330" name="user_id">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="525" parent="330" name="name">
+    <column id="526" parent="330" name="name">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>varchar(64)|0s</StoredType>
     </column>
-    <column id="526" parent="330" name="gender">
+    <column id="527" parent="330" name="gender">
       <Comment>性别 0女 1男</Comment>
       <Position>4</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="527" parent="330" name="age">
+    <column id="528" parent="330" name="age">
       <Position>5</Position>
       <StoredType>int|0s</StoredType>
     </column>
-    <column id="528" parent="330" name="contact">
+    <column id="529" parent="330" name="contact">
       <Position>6</Position>
       <StoredType>varchar(30)|0s</StoredType>
     </column>
-    <column id="529" parent="330" name="address">
+    <column id="530" parent="330" name="address">
       <Position>7</Position>
       <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="530" parent="330" name="is_deleted">
+    <column id="531" parent="330" name="is_deleted">
       <DefaultExpression>0</DefaultExpression>
       <Position>8</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="531" parent="330" name="create_time">
+    <column id="532" parent="330" name="create_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>9</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <foreign-key id="532" parent="330" name="resident_profile_ibfk_1">
+    <foreign-key id="533" parent="330" name="resident_profile_ibfk_1">
       <ColNames>user_id</ColNames>
       <RefColNames>id</RefColNames>
       <RefTableName>sys_user</RefTableName>
     </foreign-key>
-    <index id="533" parent="330" name="PRIMARY">
+    <index id="534" parent="330" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="534" parent="330" name="user_id">
+    <index id="535" parent="330" name="user_id">
       <ColNames>user_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="535" parent="330" name="PRIMARY">
+    <key id="536" parent="330" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="536" parent="330" name="user_id">
+    <key id="537" parent="330" name="user_id">
       <UnderlyingIndexName>user_id</UnderlyingIndexName>
     </key>
-    <column id="537" parent="331" name="id">
+    <column id="538" parent="331" name="id">
       <AutoIncrement>8</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="538" parent="331" name="username">
+    <column id="539" parent="331" name="username">
       <Position>2</Position>
       <StoredType>varchar(50)|0s</StoredType>
     </column>
-    <column id="539" parent="331" name="phone">
+    <column id="540" parent="331" name="phone">
       <Position>3</Position>
       <StoredType>varchar(20)|0s</StoredType>
     </column>
-    <column id="540" parent="331" name="id_card">
+    <column id="541" parent="331" name="id_card">
       <Position>4</Position>
       <StoredType>varchar(50)|0s</StoredType>
     </column>
-    <column id="541" parent="331" name="password">
+    <column id="542" parent="331" name="password">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StoredType>varchar(128)|0s</StoredType>
     </column>
-    <column id="542" parent="331" name="avatar_url">
+    <column id="543" parent="331" name="avatar_url">
       <Comment>头像地址</Comment>
       <Position>6</Position>
       <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="543" parent="331" name="status">
+    <column id="544" parent="331" name="status">
       <Comment>1正常 0禁用</Comment>
       <DefaultExpression>1</DefaultExpression>
       <Position>7</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="544" parent="331" name="is_deleted">
+    <column id="545" parent="331" name="is_deleted">
       <Comment>逻辑删除 0正常 1已删除</Comment>
       <DefaultExpression>0</DefaultExpression>
       <Position>8</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="545" parent="331" name="create_time">
+    <column id="546" parent="331" name="create_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>9</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="546" parent="331" name="update_time">
+    <column id="547" parent="331" name="update_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
       <Position>10</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="547" parent="331" name="role_type">
+    <column id="548" parent="331" name="role_type">
       <Comment>0管理员 1医生 2居民</Comment>
       <DefaultExpression>2</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>11</Position>
       <StoredType>tinyint|0s</StoredType>
     </column>
-    <index id="548" parent="331" name="PRIMARY">
+    <index id="549" parent="331" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="549" parent="331" name="username">
+    <index id="550" parent="331" name="username">
       <ColNames>username</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="550" parent="331" name="phone">
+    <index id="551" parent="331" name="phone">
       <ColNames>phone</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="551" parent="331" name="id_card">
+    <index id="552" parent="331" name="id_card">
       <ColNames>id_card</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="552" parent="331" name="PRIMARY">
+    <key id="553" parent="331" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="553" parent="331" name="username">
+    <key id="554" parent="331" name="username">
       <UnderlyingIndexName>username</UnderlyingIndexName>
     </key>
-    <key id="554" parent="331" name="phone">
+    <key id="555" parent="331" name="phone">
       <UnderlyingIndexName>phone</UnderlyingIndexName>
     </key>
-    <key id="555" parent="331" name="id_card">
+    <key id="556" parent="331" name="id_card">
       <UnderlyingIndexName>id_card</UnderlyingIndexName>
     </key>
-    <column id="556" parent="332" name="id">
+    <column id="557" parent="332" name="id">
       <AutoIncrement>5</AutoIncrement>
       <NotNull>1</NotNull>
       <Position>1</Position>
       <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="557" parent="332" name="config_key">
+    <column id="558" parent="332" name="config_key">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StoredType>varchar(100)|0s</StoredType>
     </column>
-    <column id="558" parent="332" name="config_value">
+    <column id="559" parent="332" name="config_value">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StoredType>varchar(500)|0s</StoredType>
     </column>
-    <column id="559" parent="332" name="description">
+    <column id="560" parent="332" name="description">
       <Position>4</Position>
       <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="560" parent="332" name="update_time">
+    <column id="561" parent="332" name="update_time">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
       <Position>5</Position>
       <StoredType>datetime|0s</StoredType>
     </column>
-    <index id="561" parent="332" name="PRIMARY">
+    <index id="562" parent="332" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="562" parent="332" name="PRIMARY">
+    <key id="563" parent="332" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
