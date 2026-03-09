@@ -157,7 +157,12 @@ public class UserServiceImpl implements UserService {
                 .updateTime(LocalDateTime.now())
                 .roleType(AccountConstant.ROLE_RESIDENT)
                 .build();
-        userMapper.insert(sysUser);
+
+        try {
+            userMapper.insert(sysUser);
+        } catch (Exception e) {
+            throw new BaseException("用户已存在");
+        }
         ResidentProfile residentProfile = ResidentProfile.builder()
                 .userId(sysUser.getId())
                 .name(residentRegisterDTO.getName())

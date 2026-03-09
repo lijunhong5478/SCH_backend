@@ -47,7 +47,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @DataBackUp(module = ModuleConstant.APPOINTMENT_BOOK)
     @Override
-    public void saveAppointment(ExactTimeAppointmentDTO dto) {
+    public String saveAppointment(ExactTimeAppointmentDTO dto) {
         Appointment appointment = new Appointment();
         BeanUtils.copyProperties(dto, appointment);
         appointment.setAppointmentStatus(AppointConstant.BOOKED);
@@ -73,6 +73,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         sendNotification("doctor", dto.getDoctorId(), "新预约通知", appointment.getQueueNo());
         //发送通知给管理员
         pushAppointmentStatsToAdmins();
+
+        return appointment.getQueueNo();
     }
 
     @Override

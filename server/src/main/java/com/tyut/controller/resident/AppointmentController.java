@@ -20,8 +20,7 @@ public class AppointmentController {
     @PostMapping
     @ApiOperation("社区居民预约接口")
     public Result<String> appointment(@RequestBody ExactTimeAppointmentDTO dto) {
-        appointmentService.saveAppointment(dto);
-        return Result.success();
+        return Result.success(appointmentService.saveAppointment(dto));
     }
     @GetMapping("/list")
     @ApiOperation("社区居民查询预约列表接口")

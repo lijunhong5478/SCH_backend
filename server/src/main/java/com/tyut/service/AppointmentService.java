@@ -7,7 +7,7 @@ import com.tyut.result.PageResult;
 import java.util.Map;
 
 public interface AppointmentService {
-    void saveAppointment(ExactTimeAppointmentDTO dto);
+    String saveAppointment(ExactTimeAppointmentDTO dto);
     PageResult list(AppointmentQueryDTO dto);
     void cancelAppointment(Long appointmentId, String cancelReason);
     void call(Long appointmentId);

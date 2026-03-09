@@ -56,6 +56,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/csrf",
                         "/common/user/login/**",
                         "/resident/account/register/**",
+                        "/common/file/**",
                         "/ws/**"
                 );
     }
