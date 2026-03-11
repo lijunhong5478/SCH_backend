@@ -4,16 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="优化了部分细节">
+    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="完成了下载图像文件到代理地址的逻辑，便于导出健康档案功能的实现">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/WebMvcConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/WebMvcConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/src/main/java/com/tyut/utils/TriageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/utils/TriageUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/UploadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/common/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/AppointmentQueryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/AppointmentQueryDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/DoctorConsultationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/ConsultationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/AppointmentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/AppointmentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/ConsultationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/resident/ConsultationController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/AppointmentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/AppointmentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/ConsultationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/ConsultationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/AppointmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/AppointmentServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/triage_model/Modelfile" beforeDir="false" afterPath="$PROJECT_DIR$/triage_model/Modelfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/ConsultationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/ConsultationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/test/java/com/tyut/ConsultationServiceTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -302,6 +305,14 @@
       <workItem from="1773029351313" duration="332000" />
       <workItem from="1773029705305" duration="100000" />
       <workItem from="1773044369215" duration="8397000" />
+      <workItem from="1773059852901" duration="137000" />
+      <workItem from="1773109913785" duration="81000" />
+      <workItem from="1773110014769" duration="547000" />
+      <workItem from="1773112073006" duration="935000" />
+      <workItem from="1773131222940" duration="16000" />
+      <workItem from="1773131257500" duration="1731000" />
+      <workItem from="1773134309602" duration="2000" />
+      <workItem from="1773134664737" duration="12468000" />
     </task>
     <task id="LOCAL-00001" summary="1.完成了系统初始化配置 2.完成了用户管理模块，为不同角色的用户赋予了不同的操作权限 3.完成了日志记录，引入逻辑删除字段，便于系统的备份与恢复">
       <option name="closed" value="true" />
@@ -399,7 +410,15 @@
       <option name="project" value="LOCAL" />
       <updated>1772941021694</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="完成了下载图像文件到代理地址的逻辑，便于导出健康档案功能的实现">
+      <option name="closed" value="true" />
+      <created>1773059957291</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1773059957291</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -439,7 +458,8 @@
     <MESSAGE value="完成了后端部分主干内容，后续可以补充导出健康档案报表的逻辑以及部分数据统计逻辑。还可以引入缓存和消息队列优化性能。" />
     <MESSAGE value="完成了后端所有业务功能，后续可以在查询医生信息方面增加Redis缓存，在叫号挂号模块引入消息队列作为优化。" />
     <MESSAGE value="优化了部分细节" />
-    <option name="LAST_COMMIT_MESSAGE" value="优化了部分细节" />
+    <MESSAGE value="完成了下载图像文件到代理地址的逻辑，便于导出健康档案功能的实现" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成了下载图像文件到代理地址的逻辑，便于导出健康档案功能的实现" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

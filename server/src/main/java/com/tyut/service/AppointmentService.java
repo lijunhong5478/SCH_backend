@@ -4,6 +4,8 @@ import com.tyut.dto.AppointmentQueryDTO;
 import com.tyut.dto.ExactTimeAppointmentDTO;
 import com.tyut.result.PageResult;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 public interface AppointmentService {
@@ -21,4 +23,12 @@ public interface AppointmentService {
      * @return 包含排队中、就诊中、已完成数量的 Map
      */
     Map<String, Integer> getTodayAppointmentStatusCount();
+
+    /**
+     * 根据日期和医生 ID 查询有排班的时段
+     * @param date 日期（yyyy-MM-dd）
+     * @param doctorId 医生 ID
+     * @return 时段列表（AM/PM）
+     */
+    List<String> getAvailableTimeSlots(LocalDate date, Long doctorId);
 }

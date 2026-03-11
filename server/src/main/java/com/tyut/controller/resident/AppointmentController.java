@@ -11,6 +11,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @RestController("residentAppointmentController")
 @RequestMapping("/resident/appointment")
 @Api(tags="居民-预约接口")
@@ -38,4 +41,15 @@ public class AppointmentController {
     public Result<Boolean> isAppointed(@RequestBody AppointmentQueryDTO dto){
         return Result.success(appointmentService.isAppointed(dto));
     }
+
+    @ApiOperation("查询医生在指定日期的排班时段")
+    @GetMapping("/availableTimeSlots")
+    public Result<List<String>> getAvailableTimeSlots(
+            @RequestParam String date,
+            @RequestParam Long doctorId) {
+        LocalDate localDate = LocalDate.parse(date);
+        return Result.success(appointmentService.getAvailableTimeSlots(localDate, doctorId));
+    }
+
+
 }

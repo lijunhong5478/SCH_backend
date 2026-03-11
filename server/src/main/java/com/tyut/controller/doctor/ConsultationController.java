@@ -1,4 +1,4 @@
-package com.tyut.controller.resident;
+package com.tyut.controller.doctor;
 
 import com.tyut.constant.ConsultationConstant;
 import com.tyut.context.BaseContext;
@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController("residentConsultationController")
-@RequestMapping("/resident/consultation")
-@Api(tags = "居民-咨询接口")
+@RestController("doctorConsultationController")
+@RequestMapping("/doctor/consultation")
+@Api(tags = "医生-咨询接口")
 public class ConsultationController {
 
     @Autowired
@@ -32,7 +32,7 @@ public class ConsultationController {
     @PostMapping("/session/ensure")
     @ApiOperation("创建或获取进行中会话")
     public Result<Long> createOrGetActiveSession(@RequestBody StartConsultationDTO dto) {
-        Long sessionId = consultationService.createOrGetActiveSession(dto.getDoctorId(), BaseContext.getCurrentId());
+        Long sessionId = consultationService.createOrGetActiveSession(BaseContext.getCurrentId(), dto.getResidentId());
         return Result.success(sessionId);
     }
 
@@ -71,7 +71,7 @@ public class ConsultationController {
         consultationService.markSessionReadUpTo(
                 dto.getSessionId(),
                 BaseContext.getCurrentId(),
-                ConsultationConstant.RESIDENT_SENDER,
+                ConsultationConstant.DOCTOR_SENDER,
                 dto.getLastReadMessageId());
         return Result.success();
     }
@@ -81,7 +81,7 @@ public class ConsultationController {
     public Result<List<ConsultationUnreadVO>> unreadBySession() {
         return Result.success(consultationService.getUnreadCountBySession(
                 BaseContext.getCurrentId(),
-                ConsultationConstant.RESIDENT_SENDER));
+                ConsultationConstant.DOCTOR_SENDER));
     }
 
     @PostMapping("/messages/delivered-ack")
@@ -91,7 +91,7 @@ public class ConsultationController {
                 dto.getSessionId(),
                 dto.getMessageId(),
                 BaseContext.getCurrentId(),
-                ConsultationConstant.RESIDENT_SENDER);
+                ConsultationConstant.DOCTOR_SENDER);
         return Result.success();
     }
 

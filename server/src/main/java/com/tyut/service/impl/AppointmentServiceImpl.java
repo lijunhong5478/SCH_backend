@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.websocket.Session;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -152,8 +153,13 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void call(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
+        if (appointment == null) {
+            throw new BaseException("预约记录不存在！");
+        }
+        // 仅允许在排队中或过号状态下叫号，支持过号后重新叫号。
         if (!Objects.equals(appointment.getAppointmentStatus(), AppointConstant.BOOKED)
-                || Objects.equals(appointment.getVisitStatus(), VisitConstant.IN_VISIT)) {
+                || (!Objects.equals(appointment.getVisitStatus(), VisitConstant.WAITING)
+                && !Objects.equals(appointment.getVisitStatus(), VisitConstant.SKIPPED))) {
             throw new BaseException("当前预约不可叫号！");
         }
         appointment.setVisitStatus(VisitConstant.CALLED);
@@ -183,7 +189,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     public void skip(Long appointmentId) {
         Appointment appointment = appointmentMapper.selectById(appointmentId);
         if (!Objects.equals(appointment.getAppointmentStatus(), AppointConstant.BOOKED)
-                || !Objects.equals(appointment.getVisitStatus(), VisitConstant.CALLED)
+                || !Objects.equals(appointment.getVisitStatus(), VisitConstant.WAITING)
+                && !Objects.equals(appointment.getVisitStatus(), VisitConstant.CALLED)
         ) {
             throw new BaseException("当前预约不可跳过！");
         }
@@ -296,9 +303,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     private void sendNotification(String userType, Long userId, String title, String queueNo) {
         try {
             String sid = userType + "_" + userId;
-            String message = title + "：请关注您的排队序号 " + queueNo;
 
-            if (webSocketServer.isUserOnline(userType + "_", userId)) {
+            // WebSocketServer.isUserOnline internally appends "_" + userId.
+            if (webSocketServer.isUserOnline(userType, userId)) {
                 webSocketServer.sendToClient(sid, buildNotificationJson(title, queueNo));
             }
         } catch (Exception e) {
@@ -335,6 +342,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .replace("\r", "\\r")
                 .replace("\t", "\\t");
     }
+
     /**
      * 构建统计 JSON 消息
      */
@@ -354,5 +362,33 @@ public class AppointmentServiceImpl implements AppointmentService {
                 stats.getOrDefault("finished", 0),
                 LocalDateTime.now().toString()
         );
+    }
+
+    @Override
+    public List<String> getAvailableTimeSlots(LocalDate date, Long doctorId) {
+        // 特殊判断：如果是今天且超过 17:00，直接返回空集合
+        LocalDate today = LocalDate.now();
+        if (today.equals(date)) {
+            LocalTime currentTime = LocalTime.now();
+            if (currentTime.isAfter(LocalTime.of(17, 0))) {
+                return Collections.emptyList();
+            }
+        }
+
+        // 根据日期计算星期几 (1-7，1 代表周一)
+        int weekDay = date.getDayOfWeek().getValue();
+
+        // 查询该医生在该星期的排班
+        LambdaQueryWrapper<DoctorSchedule> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DoctorSchedule::getDoctorId, doctorId)
+                .eq(DoctorSchedule::getWeekDay, weekDay)
+                .eq(DoctorSchedule::getStatus, 1); // 只查询正常状态的排班
+
+        List<DoctorSchedule> schedules = doctorScheduleMapper.selectList(queryWrapper);
+
+        // 提取时段信息并返回
+        return schedules.stream()
+                .map(DoctorSchedule::getTimeSlot)
+                .collect(Collectors.toList());
     }
 }
