@@ -64,4 +64,11 @@ public class DiagnosisReportServiceImpl implements DiagnosisReportService {
         }
         return false;
     }
+
+    @Override
+    public DiagnosisReport getByVisitId(Long visitId) {
+        LambdaQueryWrapper<DiagnosisReport> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DiagnosisReport::getVisitId, visitId);
+        return diagnosisReportMapper.selectOne(queryWrapper);
+    }
 }

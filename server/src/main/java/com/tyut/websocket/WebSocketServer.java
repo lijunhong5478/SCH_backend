@@ -48,7 +48,7 @@ public class WebSocketServer implements ApplicationContextAware {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam("sid") String sid) {
-        System.out.println("客户端：" + sid + "建立连接");
+        //System.out.println("客户端：" + sid + "建立连接");
         sessionMap.put(sid, session);
 
         // 解析sid并存储用户信息到WebSocket上下文
@@ -62,7 +62,7 @@ public class WebSocketServer implements ApplicationContextAware {
      */
     @OnMessage
     public void onMessage(String message, @PathParam("sid") String sid) {
-        System.out.println("收到来自客户端：" + sid + "的信息:" + message);
+        //System.out.println("收到来自客户端：" + sid + "的信息:" + message);
         // 处理消息逻辑
         handleMessage(sid, message);
     }
@@ -74,7 +74,7 @@ public class WebSocketServer implements ApplicationContextAware {
      */
     @OnClose
     public void onClose(@PathParam("sid") String sid) {
-        System.out.println("连接断开:" + sid);
+        //System.out.println("连接断开:" + sid);
         sessionMap.remove(sid);
         // 清除WebSocket上下文
         WebSocketContext.remove();
@@ -163,7 +163,7 @@ public class WebSocketServer implements ApplicationContextAware {
     private void handleMessage(String sid, String message) {
         // 根据业务需求处理消息
         try {
-            System.out.println("处理消息: " + message);
+            //System.out.println("处理消息: " + message);
             // 可以调用咨询服务处理消息
             // getConsultationService().processMessage(sid, message);
         } catch (Exception e) {

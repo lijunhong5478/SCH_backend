@@ -10,4 +10,5 @@ public interface DiagnosisReportService {
     PageResult list(DiagnosisReportQueryDTO queryDTO);
     void update(DiagnosisReport diagnosisReport);
     Boolean check(Long diagnosisId,Long doctorId);
+    DiagnosisReport getByVisitId(Long visitId);
 }

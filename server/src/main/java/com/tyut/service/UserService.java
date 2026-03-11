@@ -37,4 +37,6 @@ public interface UserService {
     void logout();
 
     PageResult list(AccountQueryDTO accountQueryDTO);
+
+    String getRealNameById(Long id);
 }

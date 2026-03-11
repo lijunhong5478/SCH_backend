@@ -19,4 +19,5 @@ public class MedicalVisit {
     private String treatmentAdvice;
     private LocalDateTime createTime;
     private Integer isDeleted;
+    private Long appointId;
 }

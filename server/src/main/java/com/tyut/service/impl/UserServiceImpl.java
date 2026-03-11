@@ -350,4 +350,9 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
+    public String getRealNameById(Long id) {
+        return residentMapper.selectRealNameById(id);
+    }
+
 }

@@ -45,4 +45,9 @@ public class MedicalVisitController {
     public Result<Boolean> contains(@RequestParam Long medicalVisitId,@RequestParam Long doctorId){
         return Result.success(medicalVisitService.contains(medicalVisitId,doctorId));
     }
+    @GetMapping("/getByAppointId")
+    @ApiOperation("根据预约id查询问诊信息")
+    public Result<MedicalVisitVO> getByAppointId(@RequestParam Long appointId){
+        return Result.success(medicalVisitService.getByAppointId(appointId));
+    }
 }

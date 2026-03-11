@@ -27,11 +27,6 @@ public class ResidentMedicalHistoryServiceImpl implements ResidentMedicalHistory
     @DataBackUp(module = ModuleConstant.MEDICAL_HISTORY_INSERT)
     @Override
     public void saveByDoctor(ResidentMedicalHistory medicalHistory) {
-        // 验证当前用户是否为医生角色
-        Integer currentUserRole = BaseContext.getCurrentRole();
-        if (currentUserRole == null || currentUserRole != AccountConstant.ROLE_DOCTOR) {
-            throw new BaseException("只有医生可以新增病史记录");
-        }
 
         // 检查是否已存在该健康档案的病史记录
         LambdaQueryWrapper<ResidentMedicalHistory> queryWrapper = new LambdaQueryWrapper<>();
@@ -74,11 +69,6 @@ public class ResidentMedicalHistoryServiceImpl implements ResidentMedicalHistory
 
     @Override
     public ResidentMedicalHistory getByResident(Long recordId) {
-        // 验证当前用户是否为居民角色
-        Integer currentUserRole = BaseContext.getCurrentRole();
-        if (currentUserRole == null || currentUserRole != AccountConstant.ROLE_RESIDENT) {
-            throw new BaseException("只有居民可以查询自己的病史记录");
-        }
 
         LambdaQueryWrapper<ResidentMedicalHistory> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ResidentMedicalHistory::getRecordId, recordId)
@@ -96,11 +86,6 @@ public class ResidentMedicalHistoryServiceImpl implements ResidentMedicalHistory
 
     @Override
     public PageResult listByDoctor(Integer pageNum, Integer pageSize, Long recordId) {
-        // 验证当前用户是否为医生角色
-        Integer currentUserRole = BaseContext.getCurrentRole();
-        if (currentUserRole == null || currentUserRole != AccountConstant.ROLE_DOCTOR) {
-            throw new BaseException("只有医生可以查询病史记录");
-        }
 
         Page<ResidentMedicalHistory> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<ResidentMedicalHistory> queryWrapper = new LambdaQueryWrapper<>();

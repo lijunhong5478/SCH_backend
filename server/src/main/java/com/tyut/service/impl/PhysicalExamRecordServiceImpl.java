@@ -29,12 +29,6 @@ public class PhysicalExamRecordServiceImpl implements PhysicalExamRecordService 
     @DataBackUp(module = ModuleConstant.PHYSICAL_EXAM_INSERT)
     @Override
     public void saveByDoctor(PhysicalExamRecord physicalExamRecord) {
-        // 验证当前用户是否为医生角色
-        Integer currentUserRole = BaseContext.getCurrentRole();
-        if (currentUserRole == null || currentUserRole != AccountConstant.ROLE_DOCTOR) {
-            throw new BaseException("只有医生可以新增体检记录");
-        }
-
         // 设置默认值
         physicalExamRecord.setIsDeleted(AccountConstant.NOT_DELETE);
         physicalExamRecord.setCreateTime(LocalDateTime.now());
@@ -80,12 +74,6 @@ public class PhysicalExamRecordServiceImpl implements PhysicalExamRecordService 
 
     @Override
     public PageResult listByResident(Integer pageNum, Integer pageSize, Long recordId) {
-        // 验证当前用户是否为居民角色
-        Integer currentUserRole = BaseContext.getCurrentRole();
-        if (currentUserRole == null || currentUserRole != AccountConstant.ROLE_RESIDENT) {
-            throw new BaseException("只有居民可以查询自己的体检记录");
-        }
-
         Page<PhysicalExamRecord> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<PhysicalExamRecord> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PhysicalExamRecord::getRecordId, recordId)
@@ -102,9 +90,6 @@ public class PhysicalExamRecordServiceImpl implements PhysicalExamRecordService 
     public PhysicalExamRecord getLatestByResident(Long recordId) {
         // 验证当前用户是否为居民角色
         Integer currentUserRole = BaseContext.getCurrentRole();
-        if (currentUserRole == null || currentUserRole != AccountConstant.ROLE_RESIDENT) {
-            throw new BaseException("只有居民可以查询自己的最近体检记录");
-        }
 
         LambdaQueryWrapper<PhysicalExamRecord> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PhysicalExamRecord::getRecordId, recordId)
@@ -124,12 +109,6 @@ public class PhysicalExamRecordServiceImpl implements PhysicalExamRecordService 
 
     @Override
     public PageResult listByDoctor(Integer pageNum, Integer pageSize, Long recordId) {
-        // 验证当前用户是否为医生角色
-        Integer currentUserRole = BaseContext.getCurrentRole();
-        if (currentUserRole == null || currentUserRole != AccountConstant.ROLE_DOCTOR) {
-            throw new BaseException("只有医生可以查询体检记录");
-        }
-
         Page<PhysicalExamRecord> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<PhysicalExamRecord> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PhysicalExamRecord::getRecordId, recordId)

@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 @Builder
 public class ExaminationReport {
     private Long id;
-    private Long visitId;
     private Integer reportType;
     private String reportContent;
     private Integer isDeleted;

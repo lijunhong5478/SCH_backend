@@ -11,4 +11,5 @@ public interface MedicalVisitService {
     void update(MedicalVisit medicalVisit);
     PageResult list(MedicalVisitQueryDTO medicalVisitQueryDTO);
     Boolean contains(Long medicalVisitId, Long doctorId);
+    MedicalVisitVO getByAppointId(Long appointId);
 }

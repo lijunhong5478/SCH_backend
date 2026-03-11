@@ -110,6 +110,13 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         return medicalVisitMapper.selectCount(queryWrapper) > 0;
     }
 
+    @Override
+    public MedicalVisitVO getByAppointId(Long appointId) {
+        MedicalVisit medicalVisit = medicalVisitMapper.selectOne(new LambdaQueryWrapper<MedicalVisit>()
+                .eq(MedicalVisit::getAppointId, appointId));
+        return medicalVisit == null ? null : getById(medicalVisit.getId());
+    }
+
     private List<MedicalVisitVO> castToVO(List<MedicalVisit> medicalVisits) {
         return medicalVisits.stream().map(medicalVisit -> {
             DoctorDetailVO doctorVO = userMapper.selectDoctorById(medicalVisit.getDoctorId());
