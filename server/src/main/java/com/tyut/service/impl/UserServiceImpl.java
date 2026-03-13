@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tyut.annotation.DataBackUp;
 import com.tyut.constant.AccountConstant;
+import com.tyut.constant.AppointConstant;
 import com.tyut.constant.LoginConstant;
 import com.tyut.constant.ModuleConstant;
 import com.tyut.context.BaseContext;
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -50,6 +52,8 @@ public class UserServiceImpl implements UserService {
     private OperationLogMapper operationLogMapper;
     @Autowired
     private HealthRecordMapper healthRecordMapper;
+    @Autowired
+    private AppointmentMapper appointmentMapper;
     /**
      * 用户登录
      *
@@ -353,6 +357,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public String getRealNameById(Long id) {
         return residentMapper.selectRealNameById(id);
+    }
+
+    @Override
+    public PageResult myPatient(Integer pageNum, Integer pageSize, Long doctorId) {
+        Page<HealthRecord> page = new Page<>(pageNum, pageSize);
+        LambdaQueryWrapper<Appointment> appointWrapper=new LambdaQueryWrapper<>();
+        appointWrapper.eq(Appointment::getDoctorId,doctorId)
+                .eq(Appointment::getAppointmentStatus, AppointConstant.FINSHED)
+                .eq(Appointment::getVisitStatus, AppointConstant.FINSHED);
+        List<Appointment> appointments = appointmentMapper.selectList(appointWrapper);
+        List<Long> patientIds = appointments.stream().map(Appointment::getResidentId).collect(Collectors.toList());
+        LambdaQueryWrapper<HealthRecord> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(HealthRecord::getIsDeleted, 0)
+                .in(HealthRecord::getResidentId, patientIds);
+        IPage<HealthRecord> pageResult=healthRecordMapper.selectPage(page, wrapper);
+        return PageResult.builder()
+                .total(pageResult.getTotal())
+                .dataList(pageResult.getRecords())
+                .build();
     }
 
 }

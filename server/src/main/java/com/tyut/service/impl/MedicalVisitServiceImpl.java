@@ -57,6 +57,7 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         vo.setResidentName(name);
         return vo;
     }
+
     @DataBackUp(module = ModuleConstant.MEDICAL_VISIT_INSERT)
     @Override
     public void save(MedicalVisit medicalVisit) {
@@ -64,6 +65,7 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
         medicalVisit.setCreateTime(java.time.LocalDateTime.now());
         medicalVisitMapper.insert(medicalVisit);
     }
+
     @DataBackUp(module = ModuleConstant.MEDICAL_VISIT_UPDATE)
     @Override
     public void update(MedicalVisit medicalVisit) {
@@ -74,10 +76,13 @@ public class MedicalVisitServiceImpl implements MedicalVisitService {
     public PageResult list(MedicalVisitQueryDTO medicalVisitQueryDTO) {
         Page<MedicalVisit> page = new Page<>(medicalVisitQueryDTO.getPageNum(), medicalVisitQueryDTO.getPageSize());
         LambdaQueryWrapper<MedicalVisit> queryWrapper = new LambdaQueryWrapper<>();
-        if(medicalVisitQueryDTO.getResidentId() != null){
+        if (medicalVisitQueryDTO.getResidentId() != null) {
             queryWrapper.eq(MedicalVisit::getResidentId, medicalVisitQueryDTO.getResidentId());
         }
-        if(medicalVisitQueryDTO.getPatientName() != null){
+        if (medicalVisitQueryDTO.getDoctorId() != null) {
+            queryWrapper.eq(MedicalVisit::getDoctorId, medicalVisitQueryDTO.getDoctorId());
+        }
+        if (medicalVisitQueryDTO.getPatientName() != null) {
             List<ResidentProfile> residentProfiles = residentMapper.selectList(new LambdaQueryWrapper<ResidentProfile>()
                     .eq(ResidentProfile::getName, medicalVisitQueryDTO.getPatientName()));
             queryWrapper.in(MedicalVisit::getResidentId,

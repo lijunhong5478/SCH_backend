@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class MedicalVisitQueryDTO {
     private Long residentId;
+    private Long doctorId;
     private String patientName;
     private String doctorName;
     @JsonFormat(pattern = "yyyy-MM-dd")

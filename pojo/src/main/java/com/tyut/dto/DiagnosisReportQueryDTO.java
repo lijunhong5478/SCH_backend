@@ -19,6 +19,9 @@ public class DiagnosisReportQueryDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDate;
+
+    private Long doctorId;
+
     private Integer pageNum;
     private Integer pageSize;
 }

@@ -8,6 +8,7 @@ import com.tyut.constant.AccountConstant;
 import com.tyut.constant.ModuleConstant;
 import com.tyut.dto.DiagnosisReportQueryDTO;
 import com.tyut.entity.DiagnosisReport;
+import com.tyut.entity.MedicalVisit;
 import com.tyut.mapper.DiagnosisReportMapper;
 import com.tyut.mapper.MedicalVisitMapper;
 import com.tyut.result.PageResult;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DiagnosisReportServiceImpl implements DiagnosisReportService {
@@ -39,12 +42,22 @@ public class DiagnosisReportServiceImpl implements DiagnosisReportService {
     @Override
     public PageResult list(DiagnosisReportQueryDTO queryDTO) {
         LambdaQueryWrapper<DiagnosisReport> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(DiagnosisReport::getHealthRecordId, queryDTO.getHealthRecordId());
+        if(queryDTO.getHealthRecordId() != null){
+            queryWrapper.eq(DiagnosisReport::getHealthRecordId, queryDTO.getHealthRecordId());
+        }
         if (queryDTO.getCreateDate() != null) {
             queryWrapper.between(DiagnosisReport::getCreateTime,
                     queryDTO.getCreateDate().atTime(0, 0),
                     queryDTO.getCreateDate().atTime(23, 59));
         }
+        if(queryDTO.getDoctorId()!=null){
+            LambdaQueryWrapper<MedicalVisit> medicalVisitWrapper=new LambdaQueryWrapper<>();
+            medicalVisitWrapper.eq(MedicalVisit::getDoctorId,queryDTO.getDoctorId());
+            List<MedicalVisit> medicalVisits = medicalVisitMapper.selectList(medicalVisitWrapper);
+            queryWrapper.in(DiagnosisReport::getVisitId,
+                    medicalVisits.stream().map(MedicalVisit::getId).collect(Collectors.toList()));
+        }
+
         Page<DiagnosisReport> page = new Page<>(queryDTO.getPageNum(), queryDTO.getPageSize());
         IPage<DiagnosisReport> pageData = diagnosisReportMapper.selectPage(page, queryWrapper);
         return new PageResult(pageData.getTotal(), pageData.getRecords());

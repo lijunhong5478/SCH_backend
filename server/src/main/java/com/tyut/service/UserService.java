@@ -39,4 +39,6 @@ public interface UserService {
     PageResult list(AccountQueryDTO accountQueryDTO);
 
     String getRealNameById(Long id);
+
+    PageResult myPatient(Integer pageNum, Integer pageSize, Long doctorId);
 }
