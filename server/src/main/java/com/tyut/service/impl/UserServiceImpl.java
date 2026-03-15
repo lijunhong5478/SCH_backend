@@ -27,6 +27,7 @@ import com.tyut.vo.ResidentDetailVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,13 +49,20 @@ public class UserServiceImpl implements UserService {
     private JwtProperties jwtProperties;
     @Autowired
     private ResidentMapper residentMapper;
-    //注册时BaseContext中没有存储用户ID和Role,因此不能与AOP绑定
+    //注册时 BaseContext 中没有存储用户 ID 和 Role，因此不能与 AOP 绑定
     @Autowired
     private OperationLogMapper operationLogMapper;
     @Autowired
     private HealthRecordMapper healthRecordMapper;
     @Autowired
     private AppointmentMapper appointmentMapper;
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
+    
+    // 缓存键前缀
+    private static final String USER_CACHE_PREFIX = "sch:user:";
+    // 缓存过期时间：30 分钟
+    private static final long USER_CACHE_TTL = 30;
     /**
      * 用户登录
      *
@@ -98,7 +107,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据ID获取管理员信息
+     * 根据 ID 获取管理员信息
      *
      * @param id
      * @return
@@ -106,14 +115,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AdminDetailVO getAdminById(Long id) {
-        SysUser user = userMapper.selectById(id);
-        AdminDetailVO adminDetailVO = new AdminDetailVO();
-        BeanUtils.copyProperties(user, adminDetailVO);
+        // 先从 Redis 缓存获取
+        String cacheKey = USER_CACHE_PREFIX + "admin:" + id;
+        AdminDetailVO adminDetailVO = (AdminDetailVO) redisTemplate.opsForValue().get(cacheKey);
+        
+        if (adminDetailVO == null) {
+            // 缓存未命中，从数据库查询
+            SysUser user = userMapper.selectById(id);
+            if (user != null && user.getIsDeleted() != AccountConstant.IS_DELETE) {
+                adminDetailVO = new AdminDetailVO();
+                BeanUtils.copyProperties(user, adminDetailVO);
+                // 存入缓存，设置过期时间
+                redisTemplate.opsForValue().set(cacheKey, adminDetailVO, USER_CACHE_TTL, TimeUnit.MINUTES);
+            }
+        }
+        
         return adminDetailVO;
     }
 
     /**
-     * 根据ID获取医生信息
+     * 根据 ID 获取医生信息
      *
      * @param id
      * @return
@@ -121,11 +142,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public DoctorDetailVO getDoctorById(Long id) {
-        return userMapper.selectDoctorById(id);
+        // 先从 Redis 缓存获取
+        String cacheKey = USER_CACHE_PREFIX + "doctor:" + id;
+        DoctorDetailVO doctorDetailVO = (DoctorDetailVO) redisTemplate.opsForValue().get(cacheKey);
+        
+        if (doctorDetailVO == null) {
+            // 缓存未命中，从数据库查询
+            doctorDetailVO = userMapper.selectDoctorById(id);
+            if (doctorDetailVO != null) {
+                // 直接缓存 VO 对象
+                redisTemplate.opsForValue().set(cacheKey, doctorDetailVO, USER_CACHE_TTL, TimeUnit.MINUTES);
+            }
+        }
+        
+        return doctorDetailVO;
     }
 
     /**
-     * 根据ID获取居民信息
+     * 根据 ID 获取居民信息
      *
      * @param id
      * @return
@@ -133,9 +167,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResidentDetailVO getResidentById(Long id) {
-        ResidentDetailVO resident = userMapper.selectResidentById(id);
-        if (resident == null) throw new BaseException("当前账号不可用！");
-        return resident;
+        // 先从 Redis 缓存获取
+        String cacheKey = USER_CACHE_PREFIX + "resident:" + id;
+        ResidentDetailVO residentDetailVO = (ResidentDetailVO) redisTemplate.opsForValue().get(cacheKey);
+        
+        if (residentDetailVO == null) {
+            // 缓存未命中，从数据库查询
+            residentDetailVO = userMapper.selectResidentById(id);
+            if (residentDetailVO != null) {
+                // 直接缓存 VO 对象
+                redisTemplate.opsForValue().set(cacheKey, residentDetailVO, USER_CACHE_TTL, TimeUnit.MINUTES);
+            }
+            if (residentDetailVO == null) throw new BaseException("当前账号不可用！");
+        }
+        
+        return residentDetailVO;
     }
 
     /**
@@ -206,6 +252,8 @@ public class UserServiceImpl implements UserService {
         BeanUtils.copyProperties(updateProfileDTO, sysUser);
         try{
             userMapper.updateById(sysUser);
+            // 清除缓存
+            clearUserCache(updateProfileDTO.getId());
         }catch (Exception e){
             throw new BaseException("用户名或电话号码重复！");
         }
@@ -221,6 +269,8 @@ public class UserServiceImpl implements UserService {
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(updateProfileDTO, sysUser);
         userMapper.updateById(sysUser);
+        // 清除缓存
+        clearUserCache(updateProfileDTO.getId());
     }
 
     /**
@@ -241,7 +291,7 @@ public class UserServiceImpl implements UserService {
         if (updateProfileDTO.judgeResident()) {
             LambdaUpdateWrapper<ResidentProfile> wrapper = new LambdaUpdateWrapper<>();
             wrapper.eq(ResidentProfile::getUserId, updateProfileDTO.getId());
-            // 使用条件判断只设置非null字段
+            // 使用条件判断只设置非 null 字段
             Optional.ofNullable(updateProfileDTO.getName()).ifPresent(name -> wrapper.set(ResidentProfile::getName, name));
             Optional.ofNullable(updateProfileDTO.getGender()).ifPresent(gender -> wrapper.set(ResidentProfile::getGender, gender));
             Optional.ofNullable(updateProfileDTO.getAge()).ifPresent(age -> wrapper.set(ResidentProfile::getAge, age));
@@ -249,6 +299,8 @@ public class UserServiceImpl implements UserService {
             Optional.ofNullable(updateProfileDTO.getAddress()).ifPresent(address -> wrapper.set(ResidentProfile::getAddress, address));
             residentMapper.update(null, wrapper);
         }
+        // 清除缓存
+        clearUserCache(updateProfileDTO.getId());
     }
 
     /**
@@ -268,6 +320,8 @@ public class UserServiceImpl implements UserService {
         }
         sysUser.setPassword(cryptoUtil.encodePassword(newPassword));
         userMapper.updateById(sysUser);
+        // 清除缓存
+        clearUserCache(id);
     }
     @DataBackUp(module = ModuleConstant.USER_RESET_PASSWORD)
     @Override
@@ -276,6 +330,8 @@ public class UserServiceImpl implements UserService {
         wrapper.eq(SysUser::getId, userId)
                 .set(SysUser::getPassword, cryptoUtil.encodePassword("123456"));
         userMapper.update(null, wrapper);
+        // 清除缓存
+        clearUserCache(userId);
     }
 
     /**
@@ -292,6 +348,8 @@ public class UserServiceImpl implements UserService {
                 .status(status)
                 .build();
         userMapper.updateById(sysUser);
+        // 清除缓存
+        clearUserCache(id);
     }
 
     /**
@@ -306,6 +364,8 @@ public class UserServiceImpl implements UserService {
         wrapper.eq(SysUser::getId, id)
                 .set(SysUser::getIsDeleted, AccountConstant.IS_DELETE);
         userMapper.update(null, wrapper);
+        // 清除缓存
+        clearUserCache(id);
     }
 
     /**
@@ -319,6 +379,8 @@ public class UserServiceImpl implements UserService {
         wrapper.eq(SysUser::getId, id)
                 .set(SysUser::getIsDeleted, AccountConstant.NOT_DELETE);
         userMapper.update(null, wrapper);
+        // 清除缓存
+        clearUserCache(id);
     }
 
     @Override
@@ -376,6 +438,36 @@ public class UserServiceImpl implements UserService {
                 .total(pageResult.getTotal())
                 .dataList(pageResult.getRecords())
                 .build();
+    }
+
+    /**
+     * 清除用户缓存
+     * @param id 用户 ID
+     */
+    private void clearUserCache(Long id) {
+        // 查询用户信息以获取角色类型
+        SysUser user = userMapper.selectById(id);
+        if (user != null) {
+            Integer roleType = user.getRoleType();
+            String cacheKey;
+            
+            // 根据角色类型清除对应的缓存
+            if (roleType == AccountConstant.ROLE_ADMIN) {
+                cacheKey = USER_CACHE_PREFIX + "admin:" + id;
+            } else if (roleType == AccountConstant.ROLE_DOCTOR) {
+                cacheKey = USER_CACHE_PREFIX + "doctor:" + id;
+            } else if (roleType == AccountConstant.ROLE_RESIDENT) {
+                cacheKey = USER_CACHE_PREFIX + "resident:" + id;
+            } else {
+                log.warn("未知角色类型：{}, userId: {}", roleType, id);
+                return;
+            }
+            
+            redisTemplate.delete(cacheKey);
+            log.debug("清除用户缓存：key={}, roleType={}", cacheKey, roleType);
+        } else {
+            log.warn("用户不存在，无法清除缓存，userId: {}", id);
+        }
     }
 
 }

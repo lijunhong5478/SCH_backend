@@ -4,16 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="完善了诊断与检查记录的逻辑，将检查记录与预约绑定，使得预约成功后能直接插入检查记录与诊断报告">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="84416b3d-c963-4e6e-b766-645b3dfc8eec" name="Changes" comment="基本完成了后端部分全部功能，后续可以引入redis缓存提升性能">
+      <change afterPath="$PROJECT_DIR$/common/src/main/java/com/tyut/config/RedisConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/DiagnosisReportQueryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/DiagnosisReportQueryDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/MedicalVisitQueryDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/pojo/src/main/java/com/tyut/dto/MedicalVisitQueryDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/controller/doctor/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DiagnosisReportServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DiagnosisReportServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/MedicalVisitServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/MedicalVisitServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DepartmentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DepartmentServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/DoctorServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/com/tyut/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,8 +85,13 @@
     &quot;JUnit.BatchImageUploadTest.testSingleImageUpload.executor&quot;: &quot;Debug&quot;,
     &quot;JUnit.BatchResidentGeneratorTest.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.ConsultationServiceTest.testBasicCommunication.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.DoctorAvatarUpdateTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.DoctorAvatarUpdateTest.updateDoctorAvatars.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.IdCardAESTest.testEncryptionVerification.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.IdCardAESTest.testIdCardRangeEncryption.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.MaleResidentAvatarUpdateTest.updateMaleResidentAvatars.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ResidentAvatarUpdateTest.executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.ResidentAvatarUpdateTest.updateFemaleResidentAvatars.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.TestConfig.testConf.executor&quot;: &quot;Debug&quot;,
     &quot;JUnit.TestCrypto.getIdCard.executor&quot;: &quot;Run&quot;,
     &quot;JUnit.TestCrypto.test.executor&quot;: &quot;Run&quot;,
@@ -145,65 +148,64 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.Application">
-    <configuration name="BatchAvatarSetupTest.setupAllUserAvatars" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="DoctorAvatarUpdateTest.updateDoctorAvatars" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="web" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value=".*" />
+          <option name="PATTERN" value="com.tyut.test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.tyut" />
-      <option name="MAIN_CLASS_NAME" value="com.tyut.BatchAvatarSetupTest" />
-      <option name="METHOD_NAME" value="setupAllUserAvatars" />
+      <option name="PACKAGE_NAME" value="com.tyut.test" />
+      <option name="MAIN_CLASS_NAME" value="com.tyut.test.DoctorAvatarUpdateTest" />
+      <option name="METHOD_NAME" value="updateDoctorAvatars" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BatchImageUploadTest.batchUploadImagesToOSS" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MaleResidentAvatarUpdateTest.updateMaleResidentAvatars" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="web" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value=".*" />
+          <option name="PATTERN" value="com.tyut.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.tyut" />
-      <option name="MAIN_CLASS_NAME" value="com.tyut.BatchImageUploadTest" />
-      <option name="METHOD_NAME" value="batchUploadImagesToOSS" />
+      <option name="MAIN_CLASS_NAME" value="com.tyut.MaleResidentAvatarUpdateTest" />
+      <option name="METHOD_NAME" value="updateMaleResidentAvatars" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BatchImageUploadTest.testSingleImageUpload" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ResidentAvatarUpdateTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="web" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value=".*" />
+          <option name="PATTERN" value="com.tyut.test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="com.tyut" />
-      <option name="MAIN_CLASS_NAME" value="com.tyut.BatchImageUploadTest" />
-      <option name="METHOD_NAME" value="testSingleImageUpload" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="com.tyut.test" />
+      <option name="MAIN_CLASS_NAME" value="com.tyut.test.ResidentAvatarUpdateTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestGetName.testGetName" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ResidentAvatarUpdateTest.updateFemaleResidentAvatars" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="web" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value=".*" />
+          <option name="PATTERN" value="com.tyut.test.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" value="TestGetName" />
-      <option name="METHOD_NAME" value="testGetName" />
+      <option name="PACKAGE_NAME" value="com.tyut.test" />
+      <option name="MAIN_CLASS_NAME" value="com.tyut.test.ResidentAvatarUpdateTest" />
+      <option name="METHOD_NAME" value="updateFemaleResidentAvatars" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -225,10 +227,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Spring Boot.Application" />
-        <item itemvalue="JUnit.TestGetName.testGetName" />
-        <item itemvalue="JUnit.BatchAvatarSetupTest.setupAllUserAvatars" />
-        <item itemvalue="JUnit.BatchImageUploadTest.batchUploadImagesToOSS" />
-        <item itemvalue="JUnit.BatchImageUploadTest.testSingleImageUpload" />
+        <item itemvalue="JUnit.MaleResidentAvatarUpdateTest.updateMaleResidentAvatars" />
+        <item itemvalue="JUnit.ResidentAvatarUpdateTest.updateFemaleResidentAvatars" />
+        <item itemvalue="JUnit.ResidentAvatarUpdateTest" />
+        <item itemvalue="JUnit.DoctorAvatarUpdateTest.updateDoctorAvatars" />
       </list>
     </recent_temporary>
   </component>
@@ -321,7 +323,10 @@
       <workItem from="1773134664737" duration="12468000" />
       <workItem from="1773195410151" duration="20163000" />
       <workItem from="1773281960708" duration="9489000" />
-      <workItem from="1773365554121" duration="1675000" />
+      <workItem from="1773365554121" duration="1825000" />
+      <workItem from="1773502382161" duration="1500000" />
+      <workItem from="1773542301873" duration="2959000" />
+      <workItem from="1773562124405" duration="6693000" />
     </task>
     <task id="LOCAL-00001" summary="1.完成了系统初始化配置 2.完成了用户管理模块，为不同角色的用户赋予了不同的操作权限 3.完成了日志记录，引入逻辑删除字段，便于系统的备份与恢复">
       <option name="closed" value="true" />
@@ -443,7 +448,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773235439448</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="基本完成了后端部分全部功能，后续可以引入redis缓存提升性能">
+      <option name="closed" value="true" />
+      <created>1773368342050</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1773368342050</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -486,7 +499,8 @@
     <MESSAGE value="完成了下载图像文件到代理地址的逻辑，便于导出健康档案功能的实现" />
     <MESSAGE value="完善了在线问诊以及预约挂号模块，实现了实时交互" />
     <MESSAGE value="完善了诊断与检查记录的逻辑，将检查记录与预约绑定，使得预约成功后能直接插入检查记录与诊断报告" />
-    <option name="LAST_COMMIT_MESSAGE" value="完善了诊断与检查记录的逻辑，将检查记录与预约绑定，使得预约成功后能直接插入检查记录与诊断报告" />
+    <MESSAGE value="基本完成了后端部分全部功能，后续可以引入redis缓存提升性能" />
+    <option name="LAST_COMMIT_MESSAGE" value="基本完成了后端部分全部功能，后续可以引入redis缓存提升性能" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

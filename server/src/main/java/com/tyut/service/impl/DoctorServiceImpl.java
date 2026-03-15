@@ -18,14 +18,18 @@ import com.tyut.result.PageResult;
 import com.tyut.service.DoctorService;
 import com.tyut.utils.CryptoUtil;
 import com.tyut.vo.DoctorDetailVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 public class DoctorServiceImpl implements DoctorService {
     @Autowired
     private CryptoUtil cryptoUtil;
@@ -35,6 +39,12 @@ public class DoctorServiceImpl implements DoctorService {
     private DoctorProfileMapper doctorProfileMapper;
     @Autowired
     private DoctorScheduleMapper doctorScheduleMapper;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+    
+    private static final String USER_CACHE_PREFIX = "sch:user:";
+    // 缓存过期时间：30 分钟
+    private static final long USER_CACHE_TTL = 30;
 
     /**
      * 添加医生
@@ -86,11 +96,19 @@ public class DoctorServiceImpl implements DoctorService {
         doctorScheduleMapper.deleteByDoctorId(dto.getDoctorId());
         //插入新的排班计划
         List<DoctorSchedule> doctorSchedules = dto.getDoctorSchedules();
+        System.out.println(doctorSchedules);
         for (DoctorSchedule doctorSchedule : doctorSchedules) {
             doctorSchedule.setDoctorId(dto.getDoctorId());
             doctorSchedule.setCreateTime(LocalDateTime.now());
+            // 确保 weekDay 字段不为空
+            if (doctorSchedule.getWeekDay() == null) {
+                throw new IllegalArgumentException("排班信息中的 weekDay 不能为空");
+            }
             doctorScheduleMapper.insert(doctorSchedule);
         }
+        clearUserCache(dto.getDoctorId());
+        // 清除排班缓存
+        clearScheduleCache(dto.getDoctorId());
     }
 
     @Override
@@ -127,9 +145,43 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<DoctorSchedule> getDoctorScheduleById(Long id) {
-        LambdaQueryWrapper<DoctorSchedule> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(DoctorSchedule::getDoctorId, id);
-        return doctorScheduleMapper.selectList(queryWrapper);
+        // 先从 Redis 缓存获取
+        String cacheKey = USER_CACHE_PREFIX + "schedule:" + id;
+        List<DoctorSchedule> schedules = (List<DoctorSchedule>) redisTemplate.opsForValue().get(cacheKey);
+        
+        if (schedules == null) {
+            // 缓存未命中，从数据库查询
+            LambdaQueryWrapper<DoctorSchedule> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(DoctorSchedule::getDoctorId, id);
+            schedules = doctorScheduleMapper.selectList(queryWrapper);
+            
+            if (schedules != null && !schedules.isEmpty()) {
+                // 存入缓存，设置过期时间
+                redisTemplate.opsForValue().set(cacheKey, schedules, USER_CACHE_TTL, TimeUnit.MINUTES);
+            }
+        }
+        
+        return schedules;
+    }
+    /**
+     * 清除医生用户缓存
+     * @param doctorId 医生 ID
+     */
+    private void clearUserCache(Long doctorId) {
+        // 医生的缓存键为 sch:user:doctor:{id}
+        String cacheKey = USER_CACHE_PREFIX + "doctor:" + doctorId;
+        redisTemplate.delete(cacheKey);
+        log.debug("清除医生用户缓存：key={}", cacheKey);
+    }
+    
+    /**
+     * 清除医生排班缓存
+     * @param doctorId 医生 ID
+     */
+    private void clearScheduleCache(Long doctorId) {
+        String cacheKey = USER_CACHE_PREFIX + "schedule:" + doctorId;
+        redisTemplate.delete(cacheKey);
+        log.debug("清除排班缓存：{}", cacheKey);
     }
 
 }
